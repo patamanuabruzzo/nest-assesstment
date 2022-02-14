@@ -1,4 +1,9 @@
-import { Page } from 'playwright';
+import { Page, expect } from '@playwright/test';
+
+export async function navigate(page: Page, url: string, expectedTitle: string) {
+  await page.goto(url, { timeout: 0, waitUntil: 'load' });
+  expect(page.title).toContain(expectedTitle);
+}
 
 export async function hasClass(page: Page, selector: string, className: string): Promise<boolean> {
   await page.waitForSelector(selector);

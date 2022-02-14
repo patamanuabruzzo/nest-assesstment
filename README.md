@@ -1,4 +1,4 @@
-# NEST Assesstment -QA Automation Developer-
+# NEST Assesstment - QA Automation Developer
 
 ## Kudos
 
