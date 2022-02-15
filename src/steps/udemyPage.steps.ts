@@ -1,6 +1,7 @@
 import { ICustomWorld } from '../support/custom-world';
 import { navigate } from '../utils/elements';
 import { Given } from '@cucumber/cucumber';
+import { expect } from '@playwright/test';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -11,8 +12,10 @@ Given('I log in the website', async function (this: ICustomWorld) {
   //TODO: validate defined BASE_URL
   navigate(page, process.env.BASE_URL || '');
 
-  await page.locator('a:has-text("Log in")').click();
-  // await page.waitForNavigation({ waitUntil: 'load' });
+  await Promise.all([
+    await page.waitForNavigation(),
+    await page.locator('a:has-text("Log in")').click(),
+  ]);
 
   const email = page.locator(`[name = 'email']`);
   const password = page.locator(`[name = 'password']`);
@@ -23,4 +26,5 @@ Given('I log in the website', async function (this: ICustomWorld) {
   await password.fill(process.env.PASSWORD || '');
 
   await page.locator(`[name="submit"]`).click();
+  expect(await page.title()).toContain('Online Courses');
 });
