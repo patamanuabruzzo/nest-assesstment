@@ -1,6 +1,6 @@
 import { ICustomWorld } from '../support/custom-world';
 import { navigate } from '../utils/elements';
-import { Given } from '@cucumber/cucumber';
+import { Given, When } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -27,18 +27,21 @@ Given('I log in the website', async function (this: ICustomWorld) {
   await password.fill(process.env.PASSWORD || '');
 
   await page.locator(`[name="submit"]`).click();
-  await page.waitForNavigation({ waitUntil: 'load' });
+  // await page.waitForNavigation({ waitUntil: 'load' });
+  await page.waitForURL(process.env.BASE_URL || '');
 });
 
 Given('I select a category on the homescreen', async function (this: ICustomWorld) {
   const { page } = this;
   if (!page) throw new Error('No page available');
 
+  //FIXME: sometimes, it misses the hover menu and get stuck
   await page.locator(`button:has-text('Categories')`).hover();
   const dropmenu = page.locator('.js-browse-nav-level-one');
   await dropmenu.locator(`div:has-text('Development')`).first().click();
 
-  await page.waitForNavigation({ waitUntil: 'load' });
+  // await page.waitForNavigation({ waitUntil: 'load' });
+  await page.waitForURL(new RegExp('.*courses/development/'));
   expect(page.url()).toContain('courses/development');
 });
 
@@ -48,8 +51,26 @@ Given('I apply the filters for free and english courses', async function (this: 
 
   const filters = page.locator('#filter-form');
   await filters.locator(`button:has-text('Language')`).click();
-  await filters.locator(`label:has-text('English')`).click();
+  await filters.locator(`label:has-text('English')`).first().click();
   await filters.locator(`button:has-text('Price')`).click();
   await filters.locator(`label:has-text('Free')`).click();
-  await page.waitForNavigation({ waitUntil: 'networkidle' });
+});
+
+When('I select the second result and enroll in the course', async function (this: ICustomWorld) {
+  const { page } = this;
+  if (!page) throw new Error('No page available');
+
+  const courses = page.locator('.course-list--container--3zXPS');
+  await courses.locator('.popper--popper--2r2To >> nth=5').click();
+
+  // await page.waitForNavigation({ waitUntil: 'load' });
+  await page.waitForURL(new RegExp('.*course/.*'));
+  expect(page.url()).toContain('/course/');
+
+  try {
+    await page.waitForSelector(`.heading button:has-text("Enroll now")`, { timeout: 10000 });
+    await page.locator('.heading').locator(`button:has-text("Enroll now")`).click();
+  } catch (error) {
+    throw new Error('Unable to enroll on this course');
+  }
 });

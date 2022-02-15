@@ -12,4 +12,5 @@ Feature: Enroll in a Udemy course
     Given I select a category on the homescreen
     And I apply the filters for free and english courses
     When I select the second result and enroll in the course
-# Then Start to type your Then step here
+    And I request a list of courses from the API
+    Then the enrolled course should be in the list
