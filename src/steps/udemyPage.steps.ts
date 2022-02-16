@@ -1,6 +1,7 @@
 import { ICustomWorld } from '../support/custom-world';
-import { navigate } from '../utils/elements';
-import { Given, When } from '@cucumber/cucumber';
+import { navigate } from '../utils/utils';
+import { getCoursesList } from '../endpoints/api';
+import { Given, Then, When } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -40,7 +41,6 @@ Given('I select a category on the homescreen', async function (this: ICustomWorl
   const dropmenu = page.locator('.js-browse-nav-level-one');
   await dropmenu.locator(`div:has-text('Development')`).first().click();
 
-  // await page.waitForNavigation({ waitUntil: 'load' });
   await page.waitForURL(new RegExp('.*courses/development/'));
   expect(page.url()).toContain('courses/development');
 });
@@ -73,4 +73,16 @@ When('I select the second result and enroll in the course', async function (this
   } catch (error) {
     throw new Error('Unable to enroll on this course');
   }
+});
+
+// When('I request a list of courses from the API', async function (this: ICustomWorld) {});
+
+Then('The API returns a list of courses', async function (this: ICustomWorld) {
+  const response = await getCoursesList(this.api);
+
+  // eslint-disable-next-line no-console
+  console.log(await response.json());
+
+  // eslint-disable-next-line no-console
+  console.log(response.status() + ' - ' + response.statusText());
 });

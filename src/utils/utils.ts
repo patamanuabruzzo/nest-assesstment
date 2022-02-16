@@ -7,6 +7,13 @@ export async function navigate(page: Page, url: string, expectedTitle?: string) 
   }
 }
 
+export async function getAuthorizationBasic() {
+  const encodedData = Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString(
+    'base64',
+  );
+  return 'Basic ' + encodedData;
+}
+
 export async function hasClass(page: Page, selector: string, className: string): Promise<boolean> {
   await page.waitForSelector(selector);
   return await page.$eval(selector, (el, className) => el.classList.contains(className), className);

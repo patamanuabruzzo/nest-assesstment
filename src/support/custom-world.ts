@@ -1,6 +1,6 @@
 import { setWorldConstructor, World, IWorldOptions } from '@cucumber/cucumber';
 import * as messages from '@cucumber/messages';
-import { BrowserContext, Page } from 'playwright';
+import { APIRequestContext, APIResponse, BrowserContext, Page } from 'playwright';
 
 export interface CucumberWorldConstructorParams {
   parameters: { [key: string]: string };
@@ -11,7 +11,10 @@ export interface ICustomWorld extends World {
   feature?: messages.Pickle;
   context?: BrowserContext;
   page?: Page;
-
+  api?: {
+    context?: APIRequestContext;
+    response?: APIResponse;
+  };
   testName?: string;
 }
 

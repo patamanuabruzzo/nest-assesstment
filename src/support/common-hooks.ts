@@ -11,6 +11,7 @@ import {
 } from 'playwright';
 import { ITestCaseHookParameter } from '@cucumber/cucumber/lib/support_code_library_builder/types';
 import { ensureDir } from 'fs-extra';
+import { request } from '@playwright/test';
 
 let browser: ChromiumBrowser | FirefoxBrowser | WebKitBrowser;
 const tracesDir = 'traces';
@@ -53,6 +54,11 @@ Before(async function (this: ICustomWorld, { pickle }: ITestCaseHookParameter) {
     acceptDownloads: true,
     recordVideo: process.env.PWVIDEO ? { dir: 'screenshots' } : undefined,
   });
+  this.api = {
+    context: await request.newContext({
+      baseURL: process.env.API_URL,
+    }),
+  };
 
   await this.context.tracing.start({ screenshots: true, snapshots: true });
   this.page = await this.context.newPage();
