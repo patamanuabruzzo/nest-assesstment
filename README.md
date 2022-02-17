@@ -1,86 +1,42 @@
-# NEST Assesstment - QA Automation Developer
+# NEST Assessment - QA Automation Developer
 
-## Kudos
+This project was created for the Patagonian NEST Assessment 2021 for the QA Automation Developer.
 
-This repository is based on the [Cucumber-typescript-starter](https://github.com/hdorgeval/cucumber7-ts-starter/) repo.
+The objective is to enroll in a [Udemy](https://www.udemy.com/) course, selected form a filtered list, and check if the selected course appears in a fetched list of courses from the [Udemy API](https://www.udemy.com/developers/affiliate/).
 
-## What's inside
+For this, the first step is to login on the [Udemy web page](https://www.udemy.com/). The provided email and password are used in this step. Once the user is logged in, it's redirected to the homepage by the website, and there the script selects a category from the category menu found in the header. For this test, the chosen category is **Development**. This makes available a list of courses and a filter sidebar. In the sidebar, the scripts selects the **English Language** and **Free Price** filters. Once the course list is filtered, the script choose the second course available to enroll in it.
 
-- Typescript setup for writing steps with eslint/typescript and prettier
-- Launching of Playwright browser before running all tests
-- Launching new context and page for each scenario
-- Running feature with video recording option
-- Report generated with last good image attached
-- Utilies function to help you with writing steps
-- VScode configuration to debug a single feature or an only scenario (run when located on the feature file)
+After the enrollment, an API request is send to the Udemy API Client using the provided authentication keys. The request fetches a list of courses, in English, and with free price. The enrolled course name is then searched on the fetched list to find a match.
 
 ## Usage
 
-Create a repo based on this template and start writing your tests.
+Create a `.env` file following the `.env.example` structure.
+
+The `EMAIL` and `PASSWORD` fields are needed to log into the platform to enroll in a course. An account can be created at the [Udemy login page](https://www.udemy.com/join/login-popup/).
+
+The `CLIENT_ID` and `CLIENT_SECRET` fields are needed to authenticate the Udemy API requests. They can be obtained at the [Udemy API Client](https://www.udemy.com/user/edit-api-clients).
 
 ## To run your tests
 
-`npm run test` or `npx cucumber-js` runs all tests
-`npm run test <feature name>` or `npx cucumber-js <feature name>` run the single feature
+- `npm run test` to runs all tests.
+- `PWDEBUG=1 npm run test` to runs all tests with an step-by-step console.
+- `npm run test <feature name>` to run the single feature.
+- `BROWSER=firefox npm run test` to run all test using Firefox.
 
 ## Browser selection
 
-By default we will use chromium. You can define an envrionment variable called BROWSER and
-set the name of the browser. Available options: chromium, firefox, webkit
+Firefox, Chromium, or Webkit can be used to run the project. Firefox is already set in the `BROWSER` field because has less chances to show a captcha page when attempting to login on Udemy. If the field is left blank, Chromium will be used as default.
 
-On Linux and Mac you can write:
+## To add your owns tests
 
-`BROWSER=firefox npm run test` or `BROWSER=firefox npx cucumber-js` runs all tests using Firefox
+Add a Gherkin feature in the 'features' folder. In the 'steps' folder, you can create a steps file to detail the steps of your test.
 
-One Windows you need to write
+`ICustomWorld` is used to share the browser and api context between all the steps of the test. To modify it, you can found in the `custom-world.ts` file. The `ICustomWorld` configuration is made in the before steps in `common-hooks.ts` file. Both files are found at the 'support' folder.
 
-```
-set BROWSER=firefox
-npm run test
-```
+## Reports
 
-## Working with Page Objects
+A report is created automatically at the end of every run. It can be found at `reports › report.html`.
 
-I am not fond of the Page Object Model (POM) for testing. It feels like a leftover from Java world, and I do not think it fits the Javascript world. However, you can check [this PR](https://github.com/Tallyb/cucumber-playwright/pull/95/files) to see POM implementation. 
+## References
 
-## Debugging Features
-
-### From CLI
-
-- `npm run debug` - headful mode with APIs enables both APIs and debug options
-- `npm run api` - headless mode with debug apis
-- `npm run video` - headless mode vith video
-
-## In Visual Studio Code
-
-- Open the feature
-- Select the debug options in the VSCode debugger
-- Set breakpoints in the code
-
-To stop the feature, you can add the `Then debug` step inside your feature. It will stop your debugger.
-
-## To choose a reporter
-
-The last reporter/formatter found on the cucumber-js command-line wins:
-
-```text
---format summary --format @cucumber/pretty-formatter --format cucumber-console-formatter
-```
-
-In [cucumber.js](cucumber.js) file, modify the options.
-
-## To ignore a scenario
-
-- tag the scenario with `@ignore`
-
-## To check for typescript, linting and gherkin errors
-
-- run the command `npm run build`.
-
-## To view the steps usage
-
-- run the command `npm run steps-usage`.
-
-## To view the html report of the last run
-
-- run the command `npm run report`.
+This repository is based on the [Cucumber-Playwright](https://github.com/Tallyb/cucumber-playwright) repo.
