@@ -3,7 +3,7 @@
 Feature: Enroll in a Udemy course
 
   Login on Udemy, search for a free course, and enroll in it.
-  Check via API if the enrollment was successful.
+  Check if the enrolled course appears on a course list feched via API.
 
   Background: LogIn
     Given I log in the website

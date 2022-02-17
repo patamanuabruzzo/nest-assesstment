@@ -49,7 +49,6 @@ Before({ tags: '@debug' }, async function (this: ICustomWorld) {
 Before(async function (this: ICustomWorld, { pickle }: ITestCaseHookParameter) {
   const time = new Date().toISOString().split('.')[0];
   this.testName = pickle.name.replace(/\W/g, '-') + '-' + time.replace(/:|T/g, '-');
-  // customize the [browser context](https://playwright.dev/docs/next/api/class-browser#browsernewcontextoptions)
   this.context = await browser.newContext({
     acceptDownloads: true,
     recordVideo: process.env.PWVIDEO ? { dir: 'screenshots' } : undefined,
